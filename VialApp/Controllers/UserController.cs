@@ -36,5 +36,39 @@ namespace VialApp.Controllers
             }
             return Ok(res);
         }
+
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] UserModel model)
+        {
+            // Preparamos la respuesta base
+            ApiResponse<UserModel, ApiStatusResponse> res = new ApiResponse<UserModel, ApiStatusResponse>
+            {
+                Status = ApiStatusResponse.Error,
+                Message = "No se ha podido crear el usuario",
+                Data = null
+            };
+
+            // Validamos que no exista
+            UserModel? userReg = _userService.GetUserByEmail(model.Email);
+            if (userReg != null)
+            {
+                res.Status = ApiStatusResponse.Error;
+                res.Message = "Ya existe un usuario registrado con ese email";
+                res.Data = null;
+                return Ok(res);
+            }
+
+            userReg = _userService.Create(model);
+            if(userReg != null)
+            {
+                res.Status = ApiStatusResponse.Success;
+                res.Message = $"Se ha enviado un email de verificación a {userReg.Email}";
+                res.Data = userReg;
+                return Ok(res);
+            }
+
+
+            return Ok(res);
+        }
     }
 }

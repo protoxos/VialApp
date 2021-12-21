@@ -11,6 +11,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMvc();
 
 // JWT
 builder.Services.AddAuthentication(d =>
@@ -49,11 +50,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-if (!Directory.Exists("./App_Data/"))
-    Directory.CreateDirectory("./App_Data/");
-
-File.WriteAllText("./App_Data/mock.json", "{}");
-File.Delete("./App_Data/mock.json");
 
 app.Run();
